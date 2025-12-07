@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inside Out</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(#ffe1f0, #e3d7ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .card {
+        background: white;
+        width: 90%;
+        max-width: 420px;
+        padding: 30px;
+        border-radius: 22px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        animation: fadeIn 0.5s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 18px;
+        background: #ff9ad6;
+        font-size: 17px;
+        font-weight: 600;
+        color: white;
+        cursor: pointer;
+        margin-top: 15px;
+      }
+      button:hover {
+        opacity: 0.9;
+      }
+      .option-btn {
+        background: #d7c2ff;
+        margin: 8px 0;
+      }
+      .hidden {
+        display: none;
+      }
+      .question {
+        margin: 20px 0;
+        font-size: 18px;
+      }
+      .scale button {
+        width: 55px;
+        margin: 5px;
+        background: #ffc7ea;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="card">
+      <!-- JS will insert steps here -->
+    </div>
+
+    <script>
+      const categories = [
+        "🌙 The Mind's Horizon (Mental / Cognitive)",
+        "💗 The Heart's Flow (Emotional)",
+        "🌿 The Harmonious Circle (Social)",
+        "🌸 The Inner Bloom (Self-Esteem / Self-Awareness)",
+        "🎨 The Dreamer's Canvas (Creative / Imagination)",
+        "☁️ The Whispering Soul (Poetic / Inner Soul)",
+        "🔥 The Flowing Rhythm (Behavioural / Habits)",
+      ];
+
+      const questions = [
+        [
+          "💭 Do you think carefully before making a choice?",
+          "🧠 When a problem comes up, do you like finding many ways to solve it?",
+          "🔍 Do you notice patterns that others often miss?",
+          "🌙 Do you enjoy spending time alone thinking or planning?",
+          "📚 Do you like learning new things, even if they are hard?",
+          "👀 Do you pay attention to small details that others ignore?",
+          "💡 Do you often imagine 'what could happen' in different situations?",
+          "⚖ Do you trust logic more than feelings when deciding?",
+          "🧩 Do you feel happy when solving tricky problems?",
+          "📆 Do you like planning ahead for the future?",
+        ],
+        [
+          "💖 Do you often feel your emotions strongly?",
+          "👂 Can you easily notice how others are feeling?",
+          "🌊 When upset, do you calm yourself before reacting?",
+          "🤗 Are you able to comfort someone who is sad or hurt?",
+          "😊 Do small events make you feel very happy or sad?",
+          "🤔 Do you think about the reasons behind your feelings?",
+          "💞 Do you trust your feelings when making choices?",
+          "🎨 Do you express your emotions through words, art, or actions?",
+          "💌 Do you feel connected to the emotions of people you care about?",
+          "🕊 Do you try to understand your feelings instead of ignoring them?",
+        ],
+        [
+          "🤝 Do you enjoy spending time with other people?",
+          "🌟 Can you easily make new friends?",
+          "🗣 Do you feel comfortable sharing your thoughts in a group?",
+          "🌸 Do you often try to help others feel included?",
+          "👀 Can you understand how others are feeling in social situations?",
+          "💛 Do you prefer cooperating rather than competing with others?",
+          "⚡ Are you good at resolving conflicts with friends or family?",
+          "🌿 Do you enjoy meeting new people and learning about them?",
+          "💬 Do you feel confident expressing your opinions around others?",
+          "🌀 Do you adapt easily to different social situations?",
+        ],
+        [
+          "🌸 Do you feel confident about yourself most of the time?",
+          "✨ Are you aware of your strengths and weaknesses?",
+          "💖 Do you accept yourself as you are?",
+          "📝 Do you take responsibility for your actions?",
+          "🌷 Do you feel proud of your achievements?",
+          "🌞 Can you stay positive even when things go wrong?",
+          "💡 Do you trust your own decisions?",
+          "🕯 Do you take time to reflect on your thoughts and actions?",
+          "☁ Are you comfortable being alone with your own thoughts?",
+          "🌿 Do you try to improve yourself regularly?",
+        ],
+        [
+          "🎨 Do you enjoy imagining new ideas or worlds?",
+          "✏ Do you often create things like art, stories, or music?",
+          "💡 Do you like solving problems in unique ways?",
+          "🌈 Do you enjoy thinking outside the box?",
+          "🔍 Do you notice details that inspire your creativity?",
+          "💭 Do you often daydream or imagine different scenarios?",
+          "🎶 Do you enjoy expressing yourself in creative ways?",
+          "✨ Do you feel excited when working on new creative projects?",
+          "🌸 Do you get inspiration from nature, people, or experiences?",
+          "🖌 Do you enjoy experimenting with different ideas or styles?",
+        ],
+        [
+          "☁ Do you enjoy spending time reflecting on your thoughts?",
+          "🌙 Do you often notice small, beautiful things around you?",
+          "💫 Do you feel deeply connected to your inner feelings?",
+          "🖋 Do you enjoy writing, drawing, or expressing your inner world?",
+          "🌌 Do you often think about the meaning of your experiences?",
+          "🕊 Do you feel calm and peaceful when alone with your thoughts?",
+          "💭 Do you like exploring your own emotions and ideas?",
+          "🌠 Do you enjoy dreaming about possibilities beyond reality?",
+          "🌷 Do you feel inspired by nature, music, or art?",
+          "🍃 Do you often seek quiet moments to understand yourself better?",
+        ],
+        [
+          "🗓 Do you follow a daily routine most of the time?",
+          "💪 Do you finish tasks you start without giving up easily?",
+          "⏰ Do you manage your time well?",
+          "🎯 Do you stay focused when working on important tasks?",
+          "🧹 Do you keep your surroundings organized and tidy?",
+          "📋 Do you plan your goals and take steps to achieve them?",
+          "🌊 Do you stay calm under pressure or stressful situations?",
+          "🌿 Do you adapt your habits when needed to improve yourself?",
+          "⏳ Do you avoid procrastinating important work?",
+          "🔍 Do you reflect on your actions and try to improve?",
+        ],
+      ];
+
+      // You will paste the 7×10 questions here later (same structure as Java)
+      // PERSONALITY TYPES (7 categories × 4 outcomes)
+      const types = [
+        [
+          "The Moonlit Thinker 🌙💡",
+          "The Quiet Analyzer 🕯🧩",
+          "The Gentle Strategist 🌸⚖",
+          "The Curious Mind 🌟🔍",
+        ],
+        [
+          "The Serene Soul 💖🌊",
+          "The Storm-Hearted ⛈💌",
+          "The Overflowing Empath 💞🌸",
+          "The Gentle River 🌷🕊",
+        ],
+        [
+          "The Gentle Connector 🤝🌿",
+          "The Silent Observer 👀🍃",
+          "The Warm Companion 💛✨",
+          "The Harmonious Voice 🎶🌸",
+        ],
+        [
+          "The Blooming Heart 🌸💖",
+          "The Confident Whisper ✨🕯",
+          "The Self-Knowing Soul 💡🌷",
+          "The Inner Flame 🔥🌿",
+        ],
+        [
+          "The Canvas Heart 🎨💖",
+          "The Story Weaver ✏🌈",
+          "The Dreamy Visionary 💭🌌",
+          "The Quiet Creator 🖌☁",
+        ],
+        [
+          "The Lost Poet ☁🖋",
+          "The Whispering Mind 🌙💫",
+          "The Cloud Chaser 🌠🍃",
+          "The Inner Voyager 🕊🌸",
+        ],
+        [
+          "The Gentle Disciplined 🗓🌿",
+          "The Mindful Navigator 🌊🧭",
+          "The Rhythm Keeper 🎯🎵",
+          "The Balanced Explorer ⚖🌟",
+        ],
+      ];
+
+      // DESCRIPTIONS
+      // -------------------- Descriptions --------------------
+      const descriptions = [
+        // Mental / Cognitive
+        [
+          "You analyze problems carefully and notice patterns others miss 🌌🧩. Your mind is sharp, curious, and reflective. You enjoy diving deep into ideas and exploring possibilities, often coming up with unique solutions that impress others. Your logical approach helps you navigate challenges with clarity and confidence. Keep nurturing your intellect and exploring new concepts.",
+          "You quietly observe and approach challenges methodically 🕊🔍. Your patience and thoughtfulness allow you to see what others might overlook. You balance logic and insight, carefully planning your actions for optimal results. Your calm and analytical nature inspires trust and respect in those around you.",
+          "You balance logic and creativity thoughtfully 🌷💡. Your mind can see connections that others miss, blending reasoning with imagination. You approach problems with both heart and mind, generating innovative and effective solutions. Keep exploring ideas and sharing your thoughtful perspective with others.",
+          "You are naturally inquisitive and love exploring new ideas 🌱💫. Your curiosity drives you to learn and grow continuously. You enjoy uncovering hidden patterns and understanding how things work. Others admire your enthusiasm and the depth of your insights.",
+        ],
+
+        // Emotional
+        [
+          "You feel deeply and understand emotions 💕🌙. Your sensitivity allows you to connect with others on a profound level. You bring warmth, empathy, and care into relationships, helping others feel valued and understood. Keep nurturing your emotional intelligence and sharing your heart with the world.",
+          "You experience storms inside but remain caring ⛈💌. Your resilience helps you manage strong emotions gracefully. Even in challenging times, you remain thoughtful and considerate. Your ability to navigate emotional complexity inspires those around you.",
+          "You empathize deeply with others 💞🌸. Your understanding and compassion create comfort and connection for people. You naturally sense the needs of others and respond with kindness and care. Keep embracing your heart’s capacity to love and support.",
+          "Your gentle heart flows like a calm river 🌷🕊. You create peace and harmony in your interactions, balancing sensitivity with steadiness. Your calm and nurturing presence makes others feel safe and valued.",
+        ],
+
+        // Social
+        [
+          "You connect warmly and create harmony 🤝🌿. Your presence fosters collaboration, understanding, and friendship. You are thoughtful in social situations and help others feel included. Keep spreading kindness and balancing group dynamics with your gentle influence.",
+          "You quietly observe social situations 👀🍃. Your awareness allows you to understand people and interactions deeply. You often notice things others miss, making you insightful and reliable. Your calm observation helps maintain harmony around you.",
+          "You are a warm and caring friend 💛✨. Your social energy is comforting and supportive. You build strong, meaningful connections, and people feel happy and valued around you. Keep sharing your warmth and positivity with your circle.",
+          "You maintain balance in groups and spread calm 🎶🌸. Your sense of fairness and harmony makes you a natural peacemaker. You encourage cooperation and understanding, creating a positive social environment wherever you go.",
+        ],
+
+        // Self-Esteem / Self-Awareness
+        [
+          "You have confidence and self-awareness 🌸💖. You understand your strengths and weaknesses, using them wisely in life. Your calm confidence inspires others and allows you to handle challenges gracefully. Keep nurturing your self-reflection and inner growth.",
+          "You trust yourself and move quietly with strength ✨🕯. Your inner certainty gives you resilience and purpose. You make decisions mindfully and take responsibility for your actions. Your self-assurance inspires trust in others.",
+          "You know your strengths and act wisely 💡🌷. You approach life with clarity, focusing on personal growth and meaningful achievements. Your thoughtful self-awareness allows you to navigate challenges effectively. Keep reflecting and evolving.",
+          "Your inner flame drives personal growth 🔥🌿. You embrace self-improvement and strive to be the best version of yourself. Your dedication and mindfulness make you a source of inspiration to others.",
+        ],
+
+        // Creative / Imagination
+        [
+          "You imagine new worlds and love creativity 🎨💖. Your mind is full of innovative ideas, and you enjoy exploring unique solutions. Others are inspired by your vision and artistic approach. Keep expressing your imagination freely and sharing your creations.",
+          "You weave stories beautifully ✏🌈. Your creativity brings joy and inspiration to those around you. You craft ideas and narratives with elegance and insight. Keep nurturing your creative projects and sharing your vision.",
+          "You dream vividly and see endless possibilities 💭🌌. Your imagination allows you to explore ideas beyond limits. You inspire others with your innovative thinking and open-minded approach. Keep dreaming and creating fearlessly.",
+          "You quietly create and explore new ideas 🖌☁. You naturally bring warmth, creativity, and thoughtfulness into everything you do. Others are inspired by your calm confidence and your ability to explore new ideas with curiosity and care. Your presence is gentle yet impactful, making even the smallest actions meaningful and memorable. Keep embracing your passions, reflecting deeply, and sharing your unique perspective with the world. 🌸✨",
+        ],
+
+        // Poetic / Inner Soul
+        [
+          "You reflect and notice life’s beauty ☁🖋. Your insights and observations bring depth to everyday experiences. You inspire others through your thoughtful reflections and gentle understanding.",
+          "You explore your mind with quiet wonder 🌙💫. You seek meaning and depth in everything you do, often uncovering insights that inspire and enlighten. Your introspection nurtures growth and wisdom.",
+          "You chase dreams and possibilities 🌠🍃. Your inner journey motivates you to explore opportunities and ideas fearlessly. Your optimism and hope inspire others to pursue their aspirations.",
+          "Your inner journey is peaceful and profound 🕊🌸. You embrace self-reflection, calm, and introspection, which give you clarity and a sense of purpose. Others admire your depth and serenity.",
+        ],
+
+        // Behavioural / Habits
+        [
+          "You follow habits with gentle discipline 🗓🌿. Your consistency allows you to achieve goals and build trust. Others admire your structured approach and reliability.",
+          "You navigate challenges mindfully 🌊🧭. Your awareness and focus guide you through life smoothly. You balance effort and reflection, making your actions effective and impactful.",
+          "You keep rhythm and balance in life 🎯🎵. Your organized habits and mindfulness create harmony and efficiency. You inspire others to maintain balance in their own lives.",
+          "You explore life maintaining harmony ⚖🌟. Your balanced approach combines discipline, creativity, and reflection. You encourage others to cultivate steadiness and mindfulness in their routines.",
+        ],
+      ];
+
+      // -------------------- Sweet Messages --------------------
+      const sweetMessages = [
+        // Mental / Cognitive
+        [
+          "{name}, your thoughtful mind lights up paths others can’t see 🌟💫. You are naturally inquisitive and curious, inspiring those around you with your clever insights.",
+          "{name}, your calm focus brings clarity and peace 🌿✨. Your methodical approach encourages trust and reliability in every situation.",
+          "{name}, your gentle mind shapes thoughtful solutions 🌸🌟. Your unique perspective enriches conversations and decisions.",
+          "{name}, your curiosity blooms like a radiant flower 🌸🌼. You inspire others to explore ideas with the same enthusiasm and care.",
+        ],
+
+        // Emotional
+        [
+          "{name}, your heart touches others deeply 💖🌊. Your sensitivity and care create meaningful connections.",
+          "{name}, even in storms, your soul shines 💫🌸. Your resilience and compassion inspire admiration.",
+          "{name}, your empathy creates warmth around you 💞🌷. People feel safe and valued in your presence.",
+          "{name}, your gentle nature flows like a peaceful river 🌷🕊. Your kindness spreads calm and happiness.",
+        ],
+
+        // Social
+        [
+          "{name}, your kindness spreads harmony 🤝🌿. You foster understanding and collaboration wherever you go.",
+          "{name}, your silent observation brings understanding 👀🍃. You notice details others miss and use them wisely.",
+          "{name}, your warmth comforts everyone 💛✨. Your social energy creates connection and joy.",
+          "{name}, your balanced nature keeps everyone calm 🎶🌸. Your presence nurtures peace and cooperation.",
+        ],
+
+        // Self-Esteem / Self-Awareness
+        [
+          "{name}, your self-awareness inspires others 🌸💖. Your confidence and insight motivate those around you.",
+          "{name}, your quiet confidence glows ✨🕯. You handle challenges with grace and resilience.",
+          "{name}, your inner wisdom guides your path 💡🌷. Your thoughtful reflection encourages personal growth.",
+          "{name}, your flame of self-growth is beautiful 🔥🌿. You continuously strive to be the best version of yourself.",
+        ],
+
+        // Creative / Imagination
+        [
+          "{name}, your creativity colors the world 🎨💖. You inspire imagination and new perspectives in everyone.",
+          "{name}, your stories inspire hearts ✏🌈. Your ability to craft narratives brings joy and insight.",
+          "{name}, your dreams are magical 💭🌌. You envision possibilities that others might not imagine.",
+          "{name}, your creations quietly mesmerize 🖌☁. You naturally bring warmth, creativity, and thoughtfulness into everything you do. Others are inspired by your calm confidence and your ability to explore new ideas with curiosity and care. Your presence is gentle yet impactful, making even the smallest actions meaningful and memorable. Keep embracing your passions, reflecting deeply, and sharing your unique perspective with the world. 🌸✨",
+        ],
+
+        // Poetic / Inner Soul
+        [
+          "{name}, your reflections are deep and poetic ☁🖋. You notice beauty and meaning in everyday moments.",
+          "{name}, your mind whispers wisdom 🌙💫. Your introspection inspires those around you.",
+          "{name}, your dreams soar high 🌠🍃. Your imagination motivates and encourages others.",
+          "{name}, your inner journey is calming and beautiful 🕊🌸. You inspire peace and introspection in everyone you meet.",
+        ],
+
+        // Behavioural / Habits
+        [
+          "{name}, your gentle discipline guides your life 🗓🌿. Your consistency and reliability inspire others.",
+          "{name}, your mindfulness navigates all challenges 🌊🧭. You handle tasks thoughtfully and effectively.",
+          "{name}, your rhythm keeps harmony 🎯🎵. Your balance encourages calm and focus.",
+          "{name}, your balanced exploration inspires others ⚖🌟. Your approach to life combines reflection, creativity, and steadiness.",
+        ],
+      ];
+
+      // RECOMMENDATIONS
+      const recommendations = [
+        [
+          "Spend time reflecting and journaling your ideas ✏🌙📖.",
+          "Practice puzzles or strategy games to sharpen your mind 🧩🎯.",
+          "Organize small projects to improve planning skills 📝🌈.",
+          "Explore new topics daily and feed your curiosity 📚💭.",
+        ],
+
+        [
+          "Write down your feelings or create art 🎨💌.",
+          "Meditate or do calming activities 🌿🕊.",
+          "Spend quality time helping others 💖✨.",
+          "Connect with nature to soothe your heart 🌸🌳.",
+        ],
+
+        [
+          "Engage in social activities you enjoy 🤝🌟.",
+          "Observe before acting in groups 👀🌿.",
+          "Offer help and support to friends 💛✨.",
+          "Practice harmony and patience in interactions 🎶🌸.",
+        ],
+
+        [
+          "Reflect on achievements daily 🌸📝.",
+          "Practice mindfulness and meditation ✨🕯.",
+          "Set small personal goals and track them 💡🌷.",
+          "Keep a gratitude journal to strengthen self-esteem 🔥🌿.",
+        ],
+
+        [
+          "Try painting, writing, or music daily 🎨🖌.",
+          "Start a small creative project ✏🌈.",
+          "Keep a dream journal 💭🌌.",
+          "Experiment with new ideas and styles 🖌☁.",
+        ],
+
+        [
+          "Spend quiet time in reflection ☁🖋.",
+          "Write poems or thoughts 🌙💫.",
+          "Explore hobbies that connect with your soul 🌠🍃.",
+          "Meditate or enjoy nature to recharge 🕊🌸.",
+        ],
+
+        [
+          "Stick to routines that work 🗓🌿.",
+          "Practice mindful task completion 🌊🧭.",
+          "Keep track of habits and progress 🎯🎵.",
+          "Balance work and rest ⚖🌟.",
+        ],
+      ];
+
+      let userName = "";
+      let gender = "";
+      let selectedCategory = -1;
+      let score = 0;
+      let qIndex = 0;
+
+      const app = document.getElementById("app");
+
+      // PAGE 1 — Name + Gender
+      function page1() {
+        app.innerHTML = `
+        <h2>🌸 Hey beautiful! 💖</h2>
+        <p>What’s your name?</p>
+        <input id="nameInput" style="padding:10px; width:90%; border-radius:14px; border:1px solid #ffb8e0;">
+
+        <p style="margin-top:15px;">Select your gender 🌈</p>
+        <select id="genderInput" style="padding:10px; width:90%; border-radius:14px; border:1px solid #d7c2ff;">
+            <option value="">Choose one</option>
+            <option value="he">Boy ♂️</option>
+            <option value="she">Girl ♀️</option>
+            <option value="they">Other 🌟</option>
+        </select>
+
+        <button onclick="goToPage2()">Continue ➜</button>
+    `;
+      }
+
+      function goToPage2() {
+        userName = document.getElementById("nameInput").value.trim();
+        gender = document.getElementById("genderInput").value;
+
+        if (!userName || !gender) return alert("Please enter all details 💗");
+        page2();
+      }
+
+      // PAGE 2 — Category Selection
+      function page2() {
+        app.innerHTML = `<h2>💗 Choose a Category</h2>`;
+
+        categories.forEach((c, i) => {
+          app.innerHTML += `<button class='option-btn' onclick='selectCategory(${i})'>${c}</button>`;
+        });
+      }
+
+      function selectCategory(i) {
+        selectedCategory = i;
+        qIndex = 0;
+        score = 0;
+        page3();
+      }
+
+      // PAGE 3 — Questions (10)
+      function page3() {
+        const q = questions[selectedCategory][qIndex];
+
+        app.innerHTML = `
+        <h2>Question ${qIndex + 1}/10</h2>
+        <div class='question'>${q}</div>
+        <p>Rate 1-5 🌟</p>
+        <div class='scale'>
+            <button onclick='rate(1)'>1</button>
+            <button onclick='rate(2)'>2</button>
+            <button onclick='rate(3)'>3</button>
+            <button onclick='rate(4)'>4</button>
+            <button onclick='rate(5)'>5</button>
+        </div>
+    `;
+      }
+
+      function rate(n) {
+        score += n;
+        qIndex++;
+        if (qIndex < 10) page3();
+        else page4();
+      }
+
+      // PAGE 4 — Result
+      function page4() {
+        // Calculate typeIndex based on average rating
+        let avgScore = score / 10; // 10 questions
+        let typeIndex = 0;
+
+        if (avgScore < 2) typeIndex = 0;
+        else if (avgScore < 3.5) typeIndex = 1;
+        else if (avgScore < 4.5) typeIndex = 2;
+        else typeIndex = 3;
+
+        // Get personality info
+        let title = types[selectedCategory][typeIndex];
+        let desc = descriptions[selectedCategory][typeIndex];
+        let sweet = sweetMessages[selectedCategory][typeIndex].replace(
+          "{name}",
+          userName
+        );
+        let recs = recommendations[selectedCategory]; // get array of 4 recommendations
+
+        // Combine into one long descriptive message (~30 sec read style)
+        let fullMessage = `
+    <p style="font-size:16px; line-height:1.8; margin-top:15px; text-align:left;">
+      <strong>${title}</strong><br><br>
+      ${userName} ${desc} ${sweet} You naturally bring warmth, creativity, and thoughtfulness into everything you do. Others are inspired by your calm confidence and your ability to explore new ideas with curiosity and care. Your presence is gentle yet impactful, making even the smallest actions meaningful and memorable. Keep embracing your passions, reflecting deeply, and sharing your unique perspective with the world. 🌸✨
+    </p>
+  `;
+
+        // Recommendations list
+        let recList = recs.map((r) => `<li>${r}</li>`).join("");
+
+        app.innerHTML = `
+    <div style="
+      max-width: 480px;
+      margin: auto;
+      padding: 25px;
+      background: #fff0f6;
+      border-radius: 22px;
+      text-align: center;
+    ">
+      ${fullMessage}
+      <h3 style="margin-top:20px; font-size:20px;">✨ Recommendations for You</h3>
+      <ul style="
+        text-align:left; 
+        margin-top:10px; 
+        font-size:16px; 
+        line-height:1.6; 
+        padding-left:20px;
+      ">
+        ${recList}
+      </ul>
+      <button onclick='page1()' style="
+        margin-top:20px; 
+        padding:10px 20px; 
+        border-radius:10px; 
+        border:none; 
+        background:#ff9ecb; 
+        color:white; 
+        font-size:16px; 
+        cursor:pointer;
+      ">Restart</button>
+    </div>
+  `;
+      }
+
+      page1();
+    </script>
+  </body>
+</html>
+\
